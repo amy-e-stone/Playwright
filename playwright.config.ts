@@ -33,6 +33,19 @@ export default defineConfig<TestOptions>({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
+    // Use "dot" reporter on CI, "list" otherwise (Playwright default).
+    process.env.CI ? ["dot"] : ["list"],
+    // Add Argos reporter.
+    [
+      "@argos-ci/playwright/reporter",
+      {
+        // Upload to Argos on CI only.
+        uploadToArgos: !!process.env.CI,
+
+        // Set your Argos token (required if not using GitHub Actions).
+        //token: "<YOUR-ARGOS-TOKEN>", <-- for this example we do not need a token because we set it up directly with GitHub
+      },
+    ],
     ['json', {outputFile: 'test-results/jsonReport.json'}],
     ['junit', {outputFile: 'test-results/junitReport.xml'}],
     ['html']
@@ -45,6 +58,9 @@ export default defineConfig<TestOptions>({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+
+    // For Argos settings
+    screenshot: "only-on-failure",
 
     /* Max time Playwright waits for actions (e.g., .click(), .fill(), .type()) */
     // (for individual actions)

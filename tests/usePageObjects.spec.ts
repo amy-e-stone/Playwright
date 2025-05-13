@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { PageManager } from '../page-objects/pageManager'
 import { faker } from '@faker-js/faker'
+import { argosScreenshot } from "@argos-ci/playwright";
 // ** we can now remove all other imports for each page and just have the page manager ** //
 // import { NavigationPage } from '../page-objects/navigationPage'
 // import { FormLayoutsPage } from '../page-objects/formLayoutsPage'
@@ -61,6 +62,8 @@ test('parametrized methods @smoke', async({ page }) => {
 test('testing with argos ci', async({ page }) => {
     const pm = new PageManager(page)
     await pm.navigateTo().formLayoutsPage()
+    await argosScreenshot(page, "form layouts page");
     await pm.navigateTo().datepickerPage()
+    await argosScreenshot(page, "datepicker page");
 })
 
